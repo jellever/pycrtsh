@@ -72,7 +72,8 @@ class Crtsh(object):
                         "logged_at": parse(c["entry_timestamp"]),
                         "not_before": parse(c["not_before"]),
                         "not_after": parse(c["not_after"]),
-                        "name": c["name_value"],
+                        "common_name": c["common_name"],
+                        "names": c["name_value"],
                         "ca": {
                             "caid": c["issuer_ca_id"],
                             "name": c["issuer_name"],
