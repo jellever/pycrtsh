@@ -337,17 +337,22 @@ class Crtsh(object):
         Raises:
             DependenciesNeeded: if psycopg2 isn't installed
         """
-        subdomains: List[str] = []
+        subdomains: List[dict] = []
         for entry in self.psql_query(
             """
-            select distinct(lower(name_value))
+            select distinct(lower(name_value)), max(certificate_id)
             FROM certificate_and_identities cai
             WHERE plainto_tsquery('{}') @@ identities(cai.CERTIFICATE) AND
                 lower(cai.NAME_VALUE) LIKE ('%.{}')
+            group by lower(name_value)
         """.format(
                 domain, domain
             )
         ):
             if entry[0] not in subdomains and not entry[0].startswith("*."):
-                subdomains.append(entry[0])
+
+                subdomains.append({
+                    "name": entry[0],
+                    "id": entry[1]
+                })
         return subdomains
