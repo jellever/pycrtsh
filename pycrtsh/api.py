@@ -62,6 +62,9 @@ class Crtsh(object):
         r = requests.get(
             "https://crt.sh/", params={"q": query, "output": "json"}, timeout=timeout
         )
+        if r.status_code != 200:
+            r.raise_for_status()
+
         nameparser = re.compile('([a-zA-Z]+)=("[^"]+"|[^,]+)')
         certs: List[Dict[str, Any]] = []
         try:
@@ -106,6 +109,9 @@ class Crtsh(object):
             r = requests.get("https://crt.sh/", params={"id": query})
         else:
             r = requests.get("https://crt.sh/", params={"q": query})
+
+        if r.status_code != 200:
+            r.raise_for_status()
 
         if "<BR><BR>Certificate not found </BODY>" in r.text:
             raise CrtshCertificateNotFound()
