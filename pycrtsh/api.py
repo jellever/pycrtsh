@@ -324,7 +324,7 @@ class Crtsh(object):
         except ImportError:
             raise DependenciesNeeded()
 
-        conn = psycopg2.connect("dbname=certwatch user=guest host=crt.sh")
+        conn = psycopg2.connect("dbname=certwatch user=guest host=crt.sh options='-c statement_timeout=10000'")
         conn.set_session(autocommit=True)
         cur = conn.cursor()
         cur.execute(query)
